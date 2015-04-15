@@ -46,7 +46,7 @@ class XCCDFCompose(object):
         result_dirname = self.dir_name
         template_file = ComposeXML.get_template_file()
         try:
-            target_tree = ElementTree.parse(template_file)
+            target_tree = ElementTree.parse(template_file).getroot()
         except IOError as e:
             print ('Problem with reading template.xml file')
             sys.exit(1)
@@ -92,7 +92,7 @@ class ComposeXML(object):
                 # print("Directory '%s' is missing a group.xml file!" % (new_dir))
                 continue
             try:
-                ret[dirname] = (ElementTree.parse(group_file_path),
+                ret[dirname] = (ElementTree.parse(group_file_path).getroot(),
                                 cls.collect_group_xmls(new_dir, level=level + 1))
             except ParseError as e:
                 print ("Encountered a parse error in file ", group_file_path, " details: ", e)

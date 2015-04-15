@@ -61,7 +61,7 @@ def main():
     template_file = ComposeXML.get_template_file()
     target_tree = None
     try:
-        target_tree = ElementTree.parse(template_file)
+        target_tree = ElementTree.parse(template_file).getroot()
     except IOError, e:
         print 'Problem with reading template.xml file'
         sys.exit(1)

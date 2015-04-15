@@ -72,7 +72,7 @@ class OscapGroupXml(object):
         content = get_file_content(os.path.join(self.dirname, "group.xml"),
                                    "r", False, False)
         try:
-            self.ret[self.dirname] = (ElementTree.parse(os.path.join(self.dirname, "group.xml")))
+            self.ret[self.dirname] = (ElementTree.parse(os.path.join(self.dirname, "group.xml")).getroot())
         except ParseError as par_err:
             print("Encountered a parse error in file ", self.dirname, " details: ", par_err)
         return self.ret

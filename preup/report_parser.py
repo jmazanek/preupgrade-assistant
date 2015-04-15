@@ -207,7 +207,7 @@ class ReportParser(object):
         # we really must set encoding here! and suppress it in write_to_file
         data = ElementTree.tostring(self.target_tree, "utf-8")
         write_to_file(self.path, 'wb', data, False)
-        self.target_tree = ElementTree.parse(self.path)
+        self.target_tree = ElementTree.parse(self.path).getroot()
 
     def modify_result_path(self, result_dir, scenario, mode):
         """
