@@ -4,7 +4,7 @@ import collections
 import six
 
 from preup.utils import get_file_content, write_to_file
-from preup import xccdf, utils, settings
+from preup import xccdf, utils
 from xml.etree import ElementTree
 
 
@@ -205,11 +205,9 @@ class ReportParser(object):
         """
         self.target_tree.set('xmlns:xhtml', 'http://www.w3.org/1999/xhtml/')
         # we really must set encoding here! and suppress it in write_to_file
-        data = ElementTree.tostring(self.target_tree, settings.defenc)
+        data = ElementTree.tostring(self.target_tree, "utf-8")
         write_to_file(self.path, 'wb', data, False)
-        # ElementTree.fromstring can't parse safely unicode string
-        content = get_file_content(self.path, 'r', False, False)
-        self.target_tree = ElementTree.fromstring(content)
+        self.target_tree = ElementTree.parse(self.path)
 
     def modify_result_path(self, result_dir, scenario, mode):
         """

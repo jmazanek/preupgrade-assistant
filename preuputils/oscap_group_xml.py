@@ -72,7 +72,7 @@ class OscapGroupXml(object):
         content = get_file_content(os.path.join(self.dirname, "group.xml"),
                                    "r", False, False)
         try:
-            self.ret[self.dirname] = (ElementTree.fromstring(content))
+            self.ret[self.dirname] = (ElementTree.parse(os.path.join(self.dirname, "group.xml")))
         except ParseError as par_err:
             print("Encountered a parse error in file ", self.dirname, " details: ", par_err)
         return self.ret
@@ -99,7 +99,7 @@ class OscapGroupXml(object):
         try:
             # encoding must be set! otherwise ElementTree return non-ascii characters
             # as html entities instead, which are unsusable for us
-            data = ElementTree.tostring(target_tree, settings.defenc)
+            data = ElementTree.tostring(target_tree, "utf-8")
             write_to_file(file_name, "w", data, False)
         except IOError as ioe:
             print ('Problem with writing to file ', file_name, ioe.message)

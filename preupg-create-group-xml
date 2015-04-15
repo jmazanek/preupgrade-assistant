@@ -61,8 +61,7 @@ def main():
     template_file = ComposeXML.get_template_file()
     target_tree = None
     try:
-        data = get_file_content(template_file, "r", False, False)
-        target_tree = ElementTree.fromstring(data)
+        target_tree = ElementTree.parse(template_file)
     except IOError, e:
         print 'Problem with reading template.xml file'
         sys.exit(1)
@@ -70,7 +69,7 @@ def main():
 
     try:
         # must be encoded by ElementTree!
-        data = ElementTree.tostring(target_tree, settings.defenc)
+        data = ElementTree.tostring(target_tree, "utf-8")
         write_to_file(os.path.join(dir_name, filename), "w", data, False)
         print 'Generate report file for preupgrade-assistant is:', ''.join(os.path.join(dir_name, filename))
     except IOError, e:
