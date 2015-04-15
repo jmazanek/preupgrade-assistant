@@ -125,21 +125,21 @@ def update_check_script(dir_name, updates, script_name=None, author=""):
                                   format(full_path_script))
     for func in functions:
         lines = [x for x in lines if func not in x.strip()]
-    output_text=""
+    output_text = ""
     for line in lines:
         if '#END GENERATED SECTION' in line:
             new_line = '\n'.join(generated_section)
             new_line = new_line.replace('<empty_line>', '').replace('<new_line>', '')
-            output_text +=new_line+'\n'
+            output_text += new_line+'\n'
             if 'check_applies' in updates:
                 component = updates['check_applies']
             else:
                 component = "distribution"
             if script_type == "sh":
-                output_text +='COMPONENT="'+component+'"\n'
+                output_text += 'COMPONENT="'+component+'"\n'
             else:
-                output_text +='set_component("'+component+'")\n'
-        output_text +=line
+                output_text += 'set_component("'+component+'")\n'
+        output_text += line
     write_to_file(full_path_script, "w", output_text)
 
 

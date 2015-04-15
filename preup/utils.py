@@ -13,13 +13,13 @@ def check_file(fp, mode):
     Check if file exists and has set right mode
     """
     intern_mode = 0
-    if(isinstance(mode,str)):
-      if('w' in mode or 'a' in mode):
-          intern_mode += W_OK
-      if('r' in mode):
-          intern_mode += R_OK
+    if(isinstance(mode, str)):
+        if('w' in mode or 'a' in mode):
+            intern_mode += W_OK
+        if('r' in mode):
+            intern_mode += R_OK
     else:
-      intern_mode = mode
+        intern_mode = mode
     if(path.exists(fp)):
         if(path.isfile(fp)):
             if(access(fp, intern_mode)):
@@ -30,7 +30,6 @@ def check_file(fp, mode):
             return False
     else:
         return False
-
 
 
 def check_xml(xml_file):
@@ -126,7 +125,7 @@ def run_subprocess(cmd, output=None, print_output=False, shell=False, function=N
     sp.communicate()
 
     if output is not None:
-        write_to_file(output, "wb",stdout)
+        write_to_file(output, "wb", stdout)
     return sp.returncode
 
 
@@ -195,7 +194,7 @@ def get_file_content(path, perms, method=False, decode_flag=True):
     try:
         f = open(path, perms)
         try:
-            if decode_flag == True:
+            if decode_flag is True:
                 data = f.read().decode(settings.defenc) if not method else [line.decode(settings.defenc) for line in f.readlines()]
             else:
                 data = f.read() if not method else f.readlines()
@@ -220,11 +219,11 @@ def write_to_file(path, perms, data, encode_flag=True):
         f = open(path, perms)
         try:
             if isinstance(data, list):
-                if encode_flag == True:
+                if encode_flag is True:
                     data = [line.encode(settings.defenc) for line in data]
                 f.writelines(data)
             else:
-                if encode_flag == True:
+                if encode_flag is True:
                     f.write(data.encode(settings.defenc))
                 else:
                     f.write(data)

@@ -273,7 +273,6 @@ class ComposeXML(object):
             if status.get("date", "") == "${CURRENT_DATE}":
                 status.set("date", datetime.date.today().strftime("%Y-%m-%d"))
 
-
     # taken from http://effbot.org/zone/element-lib.htm#prettyprint
     @classmethod
     def indent(cls, elem, level=0):

@@ -322,7 +322,7 @@ def check_applies_to(check_applies=""):
     not_applicable = 0
     if check_applies != "":
         rpms = check_applies.split(',')
-        lines =  get_file_content(VALUE_RPM_QA, "r", True)
+        lines = get_file_content(VALUE_RPM_QA, "r", True)
         for rpm in rpms:
             lst = filter(lambda x: rpm == x.split('\t')[0], lines)
             if not lst:
@@ -379,7 +379,7 @@ def config_file_changed(config_file_name):
         lines = get_file_content(VALUE_CONFIGCHANGED, "r", True)
         for line in lines:
             if line.find(config_file_name) != -1:
-                config_changed=True
+                config_changed = True
                 break
     except:
         pass
@@ -398,7 +398,7 @@ def backup_config_file(config_file_name):
         if not config_file_changed(config_file_name):
             return 2
 
-       # stripping / from beginning is necessary to concat paths properly
+        # stripping / from beginning is necessary to concat paths properly
         os.mkdir(os.path.join(VALUE_TMP_PREUPGRADE, os.path.dirname(config_file_name.strip("/"))))
     except OSError:
         # path probably exists, it's ok
