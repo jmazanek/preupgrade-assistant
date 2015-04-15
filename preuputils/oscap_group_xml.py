@@ -68,7 +68,9 @@ class OscapGroupXml(object):
         """
         The functions is used for collecting all INI files into the one.
         """
-        content = get_file_content(os.path.join(self.dirname, "group.xml"), "r")
+        # load content withoud decoding to unicode - ElementTree requests this
+        content = get_file_content(os.path.join(self.dirname, "group.xml"),
+                                   "r", False, False)
         try:
             self.ret[self.dirname] = (ElementTree.fromstring(content))
         except ParseError as par_err:
@@ -95,6 +97,10 @@ class OscapGroupXml(object):
         file_name = os.path.join(self.dirname, "all-xccdf.xml")
         print ('File which can be used by Preupgrade-Assistant is:\n', ''.join(file_name))
         try:
-            write_to_file(file_name, "w", ElementTree.tostring(target_tree, "utf-8"))
+            # encoding must be set! otherwise ElementTree return non-ascii characters
+            # as html entities instead, which are unsusable for us
+            data = ElementTree.tostring(target_tree, settings.defenc)
+            write_to_file(file_name, "w", data, False)
         except IOError as ioe:
             print ('Problem with writing to file ', file_name, ioe.message)
+

@@ -183,17 +183,22 @@ def get_valid_scenario(dir_name):
         return None
 
 
-def get_file_content(path, perms, method=False):
+def get_file_content(path, perms, method=False, decode_flag=True):
     """
     shortcut for returning content of file:
      open(...).read()
      if method is False then file is read by function read
      if method is True then file is read by function readlines
+     When decode_flag is True, read string is decoded to unicode. Otherwise
+     only read. (Some libraries request non-unicode strings - as ElementTree)
     """
     try:
         f = open(path, perms)
         try:
-            data = f.read().decode(settings.defenc) if not method else [line.decode(settings.defenc) for line in f.readlines()]
+            if decode_flag == True:
+                data = f.read().decode(settings.defenc) if not method else [line.decode(settings.defenc) for line in f.readlines()]
+            else:
+                data = f.read() if not method else f.readlines()
         finally:
             f.close()
             return data
@@ -201,19 +206,28 @@ def get_file_content(path, perms, method=False):
         raise
 
 
-def write_to_file(path, perms, data):
+def write_to_file(path, perms, data, encode_flag=True):
     """
     shortcut for write of data to file:
      open(...).write()
      data can be string or list of strings
+
+    data contains unicode string(s) in most cases, so we encode them
+    to system default encoding before write. When you use encoded strings,
+    set encode_flag to False to suppress second encodiding process.
     """
     try:
         f = open(path, perms)
         try:
             if isinstance(data, list):
-                f.writelines([line.encode(settings.defenc) for line in data])
+                if encode_flag == True:
+                    data = [line.encode(settings.defenc) for line in data]
+                f.writelines(data)
             else:
-                f.write(data.encode(settings.defenc))
+                if encode_flag == True:
+                    f.write(data.encode(settings.defenc))
+                else:
+                    f.write(data)
         finally:
             f.close()
     except IOError:

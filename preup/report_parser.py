@@ -4,7 +4,7 @@ import collections
 import six
 
 from preup.utils import get_file_content, write_to_file
-from preup import xccdf, utils
+from preup import xccdf, utils, settings
 from xml.etree import ElementTree
 
 
@@ -85,7 +85,8 @@ class ReportParser(object):
         self.path = report_path
         self.element_prefix = "{http://checklists.nist.gov/xccdf/1.2}"
         try:
-            content = get_file_content(report_path, 'r')
+            # ElementTree.fromstring can't parse safely unicode string
+            content = get_file_content(report_path, 'r', False, False)
         except IOError as ioerr:
             raise
         if not content:
@@ -133,7 +134,8 @@ class ReportParser(object):
         Function updates self.target_tree with the new path
         """
         self.path = path
-        content = get_file_content(self.path, 'r')
+        # ElementTree.fromstring can't parse safely unicode string
+        content = get_file_content(self.path, 'r', False, False)
         if not content:
             return None
         self.target_tree = ElementTree.fromstring(content)
@@ -202,9 +204,11 @@ class ReportParser(object):
         Function writes XML document to file
         """
         self.target_tree.set('xmlns:xhtml', 'http://www.w3.org/1999/xhtml/')
-        data = ElementTree.tostring(self.target_tree, "utf-8")
-        write_to_file(self.path, 'wb', data)
-        content = get_file_content(self.path, 'r')
+        # we really must set encoding here! and suppress it in write_to_file
+        data = ElementTree.tostring(self.target_tree, settings.defenc)
+        write_to_file(self.path, 'wb', data, False)
+        # ElementTree.fromstring can't parse safely unicode string
+        content = get_file_content(self.path, 'r', False, False)
         self.target_tree = ElementTree.fromstring(content)
 
     def modify_result_path(self, result_dir, scenario, mode):

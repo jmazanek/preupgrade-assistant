@@ -46,7 +46,8 @@ class XCCDFCompose(object):
         result_dirname = self.dir_name
         template_file = ComposeXML.get_template_file()
         try:
-            target_tree = ElementTree.fromstring(get_file_content(template_file, "r"))
+            data = get_file_content(template_file, "r", False, False)
+            target_tree = ElementTree.fromstring(data)
         except IOError as e:
             print ('Problem with reading template.xml file')
             sys.exit(1)
@@ -54,7 +55,9 @@ class XCCDFCompose(object):
 
         report_filename = os.path.join(result_dirname, settings.content_file)
         try:
-            write_to_file(report_filename, "w", ElementTree.tostring(target_tree))
+            write_to_file(report_filename, "w",
+                          ElementTree.tostring(target_tree, settings.defenc),
+                          False)
             print ('Generate report file for preupgrade-assistant is:', ''.join(report_filename))
         except IOError as e:
             print ("Problem with writing file ", report_filename)
@@ -89,7 +92,7 @@ class ComposeXML(object):
             if not os.path.isfile(group_file_path):
                 # print("Directory '%s' is missing a group.xml file!" % (new_dir))
                 continue
-            data = get_file_content(group_file_path, "r")
+            data = get_file_content(group_file_path, "r", False, False)
             try:
                 ret[dirname] = (ElementTree.fromstring(data),
                                 cls.collect_group_xmls(new_dir, level=level + 1))

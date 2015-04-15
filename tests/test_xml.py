@@ -44,7 +44,8 @@ class TestXMLCompose(unittest.TestCase):
         self.assertTrue(target_tree)
 
         expected_groups = ['failed', 'fixed', 'needs_action',
-                           'needs_inspection', 'not_applicable', 'pass']
+                           'needs_inspection', 'not_applicable', 'pass',
+                           'unicode']
 
         generated_group = []
         for group in target_tree.findall(xccdf.XMLNS + "Group"):
