@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 import six
 import datetime
 import re
@@ -21,7 +21,7 @@ def check_file(fp, mode):
     with open mode)
     """
     intern_mode = 0
-    if(isinstance(mode, str)):
+    if(isinstance(mode, six.text_type)):
         if('w' in mode or 'a' in mode):
             intern_mode += W_OK
         if('r' in mode):
