@@ -4,6 +4,7 @@ generating common logs, coping these common logs
 to assessment
 """
 
+from __future__ import unicode_literals
 import os
 import platform
 import datetime
@@ -27,7 +28,7 @@ class Common(object):
     def __init__(self, conf):
         self.conf = conf
         self.cwd = ""
-        self.lines = utils.get_file_content(self.conf.common_script, "r", method=True)
+        self.lines = utils.get_file_content(self.conf.common_script, "rb", method=True)
         self.common_result_dir = ""
 
     def common_logfiles(self, filename):

@@ -38,9 +38,9 @@ class TestRiskCheck(unittest.TestCase):
         xccdf_file = os.path.join(os.getcwd(), 'tests', 'FOOBAR6_7', 'dummy_preupg', 'all-xccdf.xml')
         temp_file = os.path.join(temp_dir, 'all_xccdf.xml')
         shutil.copyfile(xccdf_file, temp_file)
-        content = utils.get_file_content(temp_file, 'r', decode_flag=False)
+        content = utils.get_file_content(temp_file, 'rb', decode_flag=False)
         content = content.replace('INPLACE_TAG', update_text)
-        utils.write_to_file(temp_file, 'w', content)
+        utils.write_to_file(temp_file, 'wb', content)
         return temp_file
 
     def test_check_inplace_risk_high(self):

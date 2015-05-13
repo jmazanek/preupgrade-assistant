@@ -85,7 +85,7 @@ class OscapGroupXml(object):
         self.rule = xml_utils.prepare_sections()
         file_name = os.path.join(self.dirname, "group.xml")
         try:
-            write_to_file(file_name, "w", ["%s" % item for item in self.rule])
+            write_to_file(file_name, "wb", ["%s" % item for item in self.rule])
         except IOError as ior:
             print ('Problem with write data to the file ', file_name, ior.message)
 
@@ -97,7 +97,7 @@ class OscapGroupXml(object):
             # encoding must be set! otherwise ElementTree return non-ascii characters
             # as html entities instead, which are unsusable for us
             data = ElementTree.tostring(target_tree, "utf-8")
-            write_to_file(file_name, "w", data, False)
+            write_to_file(file_name, "wb", data, False)
         except IOError as ioe:
             print ('Problem with writing to file ', file_name, ioe.message)
 

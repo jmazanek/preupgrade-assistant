@@ -213,7 +213,7 @@ class TestHashes(unittest.TestCase):
         """
         self.dir_name = "tests/hashes"
         os.mkdir(self.dir_name)
-        utils.write_to_file(os.path.join(self.dir_name, "post_script"), 'w', text_to_hash)
+        utils.write_to_file(os.path.join(self.dir_name, "post_script"), 'wb', text_to_hash)
         remediate.hash_postupgrade_file(False, self.dir_name)
         return_value = remediate.hash_postupgrade_file(False, self.dir_name, check=True)
         self.assertTrue(return_value)

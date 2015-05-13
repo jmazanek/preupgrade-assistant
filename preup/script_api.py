@@ -26,6 +26,7 @@ These functions are available:
 * exit_* -- terminate execution with appropriate exit code
 """
 
+from __future__ import unicode_literals
 import os
 import sys
 import re
@@ -323,7 +324,7 @@ def check_applies_to(check_applies=""):
     not_applicable = 0
     if check_applies != "":
         rpms = check_applies.split(',')
-        lines = get_file_content(VALUE_RPM_QA, "r", True)
+        lines = get_file_content(VALUE_RPM_QA, "rb", True)
         for rpm in rpms:
             lst = filter(lambda x: rpm == x.split('\t')[0], lines)
             if not lst:
@@ -338,7 +339,7 @@ def check_rpm_to(check_rpm="", check_bin=""):
 
     if check_rpm != "":
         rpms = check_rpm.split(',')
-        lines = get_file_content(VALUE_RPM_QA, "r", True)
+        lines = get_file_content(VALUE_RPM_QA, "rb", True)
         for rpm in rpms:
             lst = filter(lambda x: rpm == x.split('\t')[0], lines)
             if not lst:
@@ -357,7 +358,7 @@ def check_rpm_to(check_rpm="", check_bin=""):
 
 
 def solution_file(message):
-    write_to_file(os.path.join(os.environ['CURRENT_DIRECTORY'], SOLUTION_FILE), "a+", message)
+    write_to_file(os.path.join(os.environ['CURRENT_DIRECTORY'], SOLUTION_FILE), "a+b", message)
 
 
 def service_is_enabled(service_name):
@@ -365,7 +366,7 @@ def service_is_enabled(service_name):
     Returns true if given service is enabled on any runlevel
     """
     return_value = False
-    lines = get_file_content(VALUE_CHKCONFIG, "r", True)
+    lines = get_file_content(VALUE_CHKCONFIG, "rb", True)
     for line in lines:
         if re.match('^%s.*:on' % service_name, line):
             return_value = True
@@ -381,7 +382,7 @@ def config_file_changed(config_file_name):
     """
     config_changed = False
     try:
-        lines = get_file_content(VALUE_CONFIGCHANGED, "r", True)
+        lines = get_file_content(VALUE_CONFIGCHANGED, "rb", True)
         for line in lines:
             if line.find(config_file_name) != -1:
                 config_changed = True

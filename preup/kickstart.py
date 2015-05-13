@@ -4,7 +4,7 @@
 Class creates a kickstart for migration scenario
 """
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 import base64
 import shutil
 import os
@@ -153,7 +153,7 @@ class KickstartGenerator(object):
         replaced/obsoleted/removed between releases. It produces a file with a list
         of packages which should be installed.
         """
-        lines = get_file_content(os.path.join(settings.KS_DIR, filename), 'r', method=True)
+        lines = get_file_content(os.path.join(settings.KS_DIR, filename), 'rb', method=True)
         # Remove newline character from list
         lines = [line.strip() for line in lines]
         return lines
@@ -165,7 +165,7 @@ class KickstartGenerator(object):
         :param filename: filename with available-repos
         :return: dictionary with enabled repolist
         """
-        lines = get_file_content(os.path.join(settings.KS_DIR, filename), 'r', method=True)
+        lines = get_file_content(os.path.join(settings.KS_DIR, filename), 'rb', method=True)
         repo_dict = {}
         for line in lines:
             fields = line.split('=')
@@ -179,7 +179,7 @@ class KickstartGenerator(object):
         :param filename: filename with Users in /root/preupgrade/kickstart directory
         :return: dictionary with users
         """
-        lines = get_file_content(os.path.join(settings.KS_DIR, filename), 'r', method=True)
+        lines = get_file_content(os.path.join(settings.KS_DIR, filename), 'rb', method=True)
         user_dict = {}
         for line in lines:
             fields = line.split(':')
@@ -200,14 +200,14 @@ class KickstartGenerator(object):
         # return display_group_names + display_package_names
 
     def embed_script(self, tarball):
-        tarball_content = get_file_content(tarball, 'r')
+        tarball_content = get_file_content(tarball, 'rb')
         script_str = ''
         try:
             script_path = settings.KS_TEMPLATE_POSTSCRIPT
         except AttributeError:
             log_message('KS_TEMPLATE_POSTSCRIPT is not defined in settings.py')
             return
-        script_str = get_file_content(os.path.join(settings.KS_DIR, script_path), 'r')
+        script_str = get_file_content(os.path.join(settings.KS_DIR, script_path), 'rb')
         if not script_str:
             log_message("Can't open script template: {0}".format(script_path))
             return
@@ -218,7 +218,7 @@ class KickstartGenerator(object):
         self.ks.handler.scripts.append(script)
 
     def save_kickstart(self):
-        write_to_file(self.kick_start_name, 'w', self.ks.handler.__str__())
+        write_to_file(self.kick_start_name, 'wb', self.ks.handler.__str__())
 
     def update_kickstart(self, text, cnt):
         self.ks_list.insert(cnt, text)

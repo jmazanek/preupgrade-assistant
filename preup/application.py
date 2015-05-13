@@ -2,6 +2,8 @@
 """
 The application module serves for running oscap binary and reporting results to UI
 """
+
+from __future__ import unicode_literals
 import shutil
 import datetime
 import os
