@@ -9,8 +9,10 @@ import os
 
 try:
     import configparser
+    solve_config_decode = lambda x: x
 except ImportError:
     import ConfigParser as configparser
+    solve_config_decode = lambda x: x.decode(settings.defenc)
 
 from preuputils.xml_utils import print_error_msg, XmlUtils
 from preup.utils import write_to_file, check_file
@@ -52,14 +54,14 @@ class OscapGroupXml(object):
                 continue
             try:
                 config = configparser.ConfigParser()
-                config.readfp(open(file_name))
+                config.readfp(open(file_name, "rb"))
                 fields = {}
                 if config.has_section('premigrate'):
                     section = 'premigrate'
                 else:
                     section = 'preupgrade'
                 for option in config.options(section):
-                    fields[option] = config.get(section, option).decode(settings.defenc)
+                    fields[option] = solve_config_decode(config.get(section, option))
                 self.loaded[file_name] = [fields]
             except configparser.MissingSectionHeaderError:
                 print_error_msg(title="Missing section header")
