@@ -45,7 +45,7 @@ class OscapGroupXml(object):
         directory
         """
         # solve python 2 & 3 compatibility
-        if(sys.version_info.major == 2):
+        if(sys.version_info[0] == 2):
             config_load = lambda x,y: x.read(y)
             config_decode = lambda x: x.decode(settings.defenc)
         else:

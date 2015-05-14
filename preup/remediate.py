@@ -27,7 +27,7 @@ def get_all_postupgrade_files(dummy_verbose, dir_name):
 def get_hash_file(filename, hasher):
     """Function gets a hash from file"""
     content = get_file_content(filename, "rb", False, False)
-    hasher.update('preupgrade-assistant' + content)
+    hasher.update(b'preupgrade-assistant' + content)
     return hasher.hexdigest()
 
 
