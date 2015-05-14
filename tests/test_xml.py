@@ -77,7 +77,7 @@ class TestXMLCompose(unittest.TestCase):
 
     def test_unicode_script_author(self):
         """Test processing of non-ascii characters for author section"""
-        u_author = b'Petr Stodůlka'.decode(settings.defenc)
+        u_author = b'Petr Stod\xc5\xaflka'.decode(settings.defenc)
         script_file = os.path.join(self.result_dir, "unicode", "dummy_unicode.sh")
         settings.autocomplete = True
         self.target_tree = ComposeXML.run_compose(self.tree, self.result_dir)
