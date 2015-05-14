@@ -5,14 +5,12 @@ So no change is needed from maintainer point of view
 """
 
 from __future__ import print_function, unicode_literals
-import os
+import os, sys
 
 try:
     import configparser
-    solve_config_decode = lambda x: x
 except ImportError:
     import ConfigParser as configparser
-    solve_config_decode = lambda x: x.decode(settings.defenc)
 
 from preuputils.xml_utils import print_error_msg, XmlUtils
 from preup.utils import write_to_file, check_file
@@ -46,6 +44,14 @@ class OscapGroupXml(object):
         This function is used for finding all _fix files in the user defined
         directory
         """
+        # solve python 2 & 3 compatibility
+        if(sys.version_info.major == 2):
+            config_load = lambda x,y: x.read(y)
+            config_decode = lambda x: x.decode(settings.defenc)
+        else:
+            config_load = lambda x,y: x.read(y, settings.defenc)
+            config_decode = lambda x: x
+
         for dir_name in os.listdir(self.dirname):
             if dir_name.endswith(".ini"):
                 self.lists.append(os.path.join(self.dirname, dir_name))
@@ -54,14 +60,14 @@ class OscapGroupXml(object):
                 continue
             try:
                 config = configparser.ConfigParser()
-                config.readfp(open(file_name, "rb"))
+                config_load(config, file_name)
                 fields = {}
                 if config.has_section('premigrate'):
                     section = 'premigrate'
                 else:
                     section = 'preupgrade'
                 for option in config.options(section):
-                    fields[option] = solve_config_decode(config.get(section, option))
+                    fields[option] = config_decode(config.get(section, option))
                 self.loaded[file_name] = [fields]
             except configparser.MissingSectionHeaderError:
                 print_error_msg(title="Missing section header")
