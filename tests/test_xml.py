@@ -62,8 +62,8 @@ class TestXMLCompose(unittest.TestCase):
         Test processing of non-ascii characters inside title and description
         sections.
         """
-        u_title = 'Čekujeme unicode u hasičů'.decode('utf-8')
-        u_descr = 'Hoří horní heršpická hospoda Hrbatý hrozen.'.decode('utf-8')
+        u_title = u'Čekujeme unicode u hasičů'
+        u_descr = u'Hoří horní heršpická hospoda Hrbatý hrozen.'
         uni_xml = os.path.join(self.result_dir, "unicode", "group.xml")
         try:
             # XML files should be always in utf-8!
@@ -77,7 +77,7 @@ class TestXMLCompose(unittest.TestCase):
 
     def test_unicode_script_author(self):
         """Test processing of non-ascii characters for author section"""
-        u_author = 'Petr Stodůlka'.decode(settings.defenc)
+        u_author = b'Petr Stodůlka'.decode(settings.defenc)
         script_file = os.path.join(self.result_dir, "unicode", "dummy_unicode.sh")
         settings.autocomplete = True
         self.target_tree = ComposeXML.run_compose(self.tree, self.result_dir)
