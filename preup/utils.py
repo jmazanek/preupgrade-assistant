@@ -100,7 +100,7 @@ def get_interpreter(filename, verbose=False):
     script_types = {'/bin/bash': '.sh',
                     '/usr/bin/python': '.py',
                     '/usr/bin/perl': '.pl'}
-    inter = list(k for k, v in script_types.iteritems() if filename.endswith(v))
+    inter = list(k for k, v in six.iteritems(script_types) if filename.endswith(v))
     content = get_file_content(filename, 'rb')
     if inter and content.startswith('#!'+inter[0]):
         return inter

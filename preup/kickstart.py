@@ -8,6 +8,7 @@ from __future__ import print_function, unicode_literals
 import base64
 import shutil
 import os
+import six
 
 from pykickstart.parser import KickstartError, KickstartParser, Script
 from pykickstart.version import makeVersion
@@ -28,7 +29,7 @@ class YumGroupManager(object):
     def find_match(self, packages):
         """is there a group whose packages are subset of argument 'packages'?"""
         groups = []
-        for group in self.groups.itervalues():
+        for group in six.itervalues(self.groups):
             if len(group.required) != 0:
                 if group.match(packages):
                     groups.append(group)
@@ -234,11 +235,11 @@ class KickstartGenerator(object):
                 shutil.copy(source_name, target_name)
 
     def update_repositories(self, repositories):
-        for key, value in repositories.iteritems():
+        for key, value in six.iteritems(repositories):
             self.ks.handler.repo.dataList().append(self.ks.handler.RepoData(name=key, baseurl=value.strip()))
 
     def update_users(self, users):
-        for key, value in users.iteritems():
+        for key, value in six.iteritems(users):
             uid, gid = value.strip().split(':')
             self.ks.handler.user.dataList().append(self.ks.handler.UserData(name=key, uid=uid, gid=gid))
 

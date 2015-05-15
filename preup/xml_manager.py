@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import os
 import re
 import rpm
+import six
 from preup.utils import get_file_content, write_to_file
 from preup import settings
 
@@ -250,7 +251,7 @@ class XmlManager(object):
          Function updates a XML or HTML file with relevant solution
          texts
         """
-        for dir_name, files in solution_files.iteritems():
+        for dir_name, files in six.iteritems(solution_files):
             section = dir_name.replace(os.path.join(self.dirname, self.scenario),
                                        "").replace("/", "_")
             solution_text = section + "_SOLUTION_MSG"

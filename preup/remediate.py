@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 import os
 import shutil
+import six
 from preup.logger import log_message, logging
 try:
     from hashlib import sha1
@@ -158,7 +159,7 @@ def special_postupgrade_scripts(result_dir):
     """
     postupgrade_dict = {"copy_clean_conf.sh": "z_copy_clean_conf.sh"}
 
-    for key, val in postupgrade_dict.iteritems():
+    for key, val in six.iteritems(postupgrade_dict):
         shutil.copy(os.path.join(settings.source_dir,
                                  settings.postupgrade_dir,
                                  key),
