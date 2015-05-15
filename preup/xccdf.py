@@ -87,4 +87,11 @@ def check_inplace_risk(xccdf_file, verbose):
     for profile in target_tree.findall(XMLNS + "TestResult"):
         inplace_risk = get_check_import_inplace_risk(profile)
 
-    return get_and_print_inplace_risk(verbose, inplace_risk)/2
+    result = get_and_print_inplace_risk(verbose, inplace_risk)
+    # different behaviour of division between py2 & 3
+    if(result < 2):
+        return 0
+    elif(result < 4):
+        return 1
+    else:
+        return 2
