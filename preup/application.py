@@ -3,7 +3,7 @@
 The application module serves for running oscap binary and reporting results to UI
 """
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 import shutil
 import datetime
 import os
@@ -594,7 +594,7 @@ class Application(object):
                 return 0
 
         if os.geteuid() != 0:
-            sys.stdout.write("Need to be root.\n")
+            print("Need to be root\n")
             if not self.conf.debug:
                 return 2
 

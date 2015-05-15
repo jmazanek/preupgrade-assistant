@@ -26,7 +26,7 @@ These functions are available:
 * exit_* -- terminate execution with appropriate exit code
 """
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 import os
 import sys
 import re
@@ -117,7 +117,7 @@ def log_risk(severity, message):
     """
     log risk level to stderr
     """
-    sys.stderr.write("INPLACERISK: %s: %s\n" % (severity, message.encode(settings.defenc)))
+    print("INPLACERISK: %s: %s\n" % (severity, message.encode(settings.defenc)), file=sys.stderr)
 
 
 def log_extreme_risk(message):
@@ -167,7 +167,7 @@ def log(severity, message, component_arg=None):
     """
     global component
     comp_show = component_arg or component
-    sys.stdout.write("%s %s: %s\n" % (severity, comp_show, message.encode(settings.defenc)))
+    print("%s %s: %s\n" % (severity, comp_show, message.encode(settings.defenc)), file=sys.stdout)
 
 
 def log_error(message, component_arg=None):
