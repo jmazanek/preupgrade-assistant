@@ -35,9 +35,7 @@ else:
     def log_message(message, print_output=1, new_line=True, level=logging.INFO, log=True):
         """ if verbose, log `msg % args` to stdout """
         if int(print_output) > 0:
-            if new_line:
-                print("%s\n" % message, file=sys.stdout, flush=True)
-            else:
-                print(message, file=sys.stdout, flush=True)
+            endline = "\n" if newline else ""
+            print(message, end=endline file=sys.stdout, flush=True)
         if log:
             logger.log(level, message)

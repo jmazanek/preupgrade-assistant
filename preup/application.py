@@ -594,7 +594,7 @@ class Application(object):
                 return 0
 
         if os.geteuid() != 0:
-            print("Need to be root\n")
+            print("Need to be root", end="\n")
             if not self.conf.debug:
                 return 2
 

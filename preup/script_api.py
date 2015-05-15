@@ -117,7 +117,7 @@ def log_risk(severity, message):
     """
     log risk level to stderr
     """
-    print("INPLACERISK: %s: %s\n" % (severity, message.encode(settings.defenc)), file=sys.stderr)
+    print("INPLACERISK: %s: %s\n" % (severity, message.encode(settings.defenc)), end="", file=sys.stderr)
 
 
 def log_extreme_risk(message):
@@ -162,12 +162,10 @@ def log_slight_risk(message):
 ##################
 
 def log(severity, message, component_arg=None):
-    """
-    log message to stdout
-    """
+    """log message to stdout"""
     global component
     comp_show = component_arg or component
-    print("%s %s: %s\n" % (severity, comp_show, message.encode(settings.defenc)), file=sys.stdout)
+    print("%s %s: %s\n" % (severity, comp_show, message.encode(settings.defenc)), end="", file=sys.stdout)
 
 
 def log_error(message, component_arg=None):
@@ -233,9 +231,7 @@ def get_dest_dir():
 
 
 def shorten_envs():
-    """
-    make all the oscap's environemt variables shorter
-    """
+    """make all the oscap's environemt variables shorter"""
     envs = os.environ
     prefixes = ('XCCDF_VALUE_', 'XCCDF_RESULT_')
     for env_key, env_value in envs.items():
@@ -245,9 +241,7 @@ def shorten_envs():
 
 
 def set_component(c):
-    """
-    configure name of component globally (it will be used in logging)
-    """
+    """configure name of component globally (it will be used in logging)"""
     global component
     component = c
 
@@ -266,6 +260,7 @@ def exit_fail():
 def exit_failed():
     """
     The test failed.
+
     Moving to new release with this configuration will result in malfunction.
     """
     sys.exit(int(os.environ['XCCDF_RESULT_FAIL']))
@@ -273,50 +268,40 @@ def exit_failed():
 
 def exit_error():
     """
-    An error occurred and test could not complete. (script failed while doing its job)
+    An error occurred and test could not complete.
+
+    (script failed while doing its job)
     """
     sys.exit(int(os.environ['XCCDF_RESULT_ERROR']))
 
 
 def exit_pass():
-    """
-    Test passed.
-    """
+    """Test passed."""
     sys.exit(int(os.environ['XCCDF_RESULT_PASS']))
 
 
 def exit_unknown():
-    """
-    Could not tell what happened.
-    """
+    """Could not tell what happened."""
     sys.exit(int(os.environ['XCCDF_RESULT_UNKNOWN']))
 
 
 def exit_not_applicable():
-    """
-    Rule did not apply to test target. (e.g. package is not installed)
-    """
+    """Rule did not apply to test target. (e.g. package is not installed)"""
     sys.exit(int(os.environ['XCCDF_RESULT_NOT_APPLICABLE']))
 
 
 def exit_fixed():
-    """
-    Rule failed, but was later fixed.
-    """
+    """Rule failed, but was later fixed."""
     sys.exit(int(os.environ['XCCDF_RESULT_FIXED']))
 
 
 def exit_informational():
-    """
-    Rule failed, but was later fixed.
-    """
+    """Rule failed, but was later fixed."""
     sys.exit(int(os.environ['XCCDF_RESULT_INFORMATIONAL']))
 
 
 def switch_to_content():
-    """
-    Function for switch to the content directory
-    """
+    """Function for switch to the content directory"""
     os.chdir(os.environ['CURRENT_DIRECTORY'])
 
 
@@ -362,9 +347,7 @@ def solution_file(message):
 
 
 def service_is_enabled(service_name):
-    """
-    Returns true if given service is enabled on any runlevel
-    """
+    """Returns true if given service is enabled on any runlevel"""
     return_value = False
     lines = get_file_content(VALUE_CHKCONFIG, "rb", True)
     for line in lines:
@@ -376,7 +359,9 @@ def service_is_enabled(service_name):
 
 def config_file_changed(config_file_name):
     """
-    Searches cached data in VALUE_CONFIGCHANGED and returns:
+    Searches cached data in VALUE_CONFIGCHANGED
+
+    returns:
     True if given config file has been changed
     False if given config file hasn't been changed
     """
@@ -393,9 +378,7 @@ def config_file_changed(config_file_name):
 
 
 def backup_config_file(config_file_name):
-    """
-    Copies specified file into VALUE_TMP_PREUPGRADE, keeping file structure
-    """
+    """Copies specified file into VALUE_TMP_PREUPGRADE, keeping file structure"""
     try:
         # report error if file doesn't exist
         if not os.path.isfile(config_file_name):
