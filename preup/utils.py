@@ -6,6 +6,7 @@ import re
 import subprocess
 import fnmatch
 import os
+import sys
 from preup import settings
 from preup.logger import log_message, logging
 import shutil
@@ -343,7 +344,10 @@ def get_message(title="", message="Do you want to continue?"):
     print (message + prompt)
     while True:
         try:
-            choice = raw_input().lower()
+            if(sys.version_info[0] == 2):
+                choice = raw_input().lower()
+            else:
+                choice = input().lower()
         except KeyboardInterrupt:
             return "n"
         if choice not in yesno:
