@@ -56,7 +56,7 @@ class Common(object):
         log_message("Gathering logs used by preupgrade assistant:")
         self.switch_dir()
         try:
-            max_length = max(max(list([len(x.split("=", 4)[3]) for x in self.lines]), len(settings.assessment_text)))
+            max_length = max(max([len(x.split("=", 4)[3]) for x in self.lines]), len(settings.assessment_text))
             # Log files which will not be updated
             # when RPM database is not changed
             for counter, line in enumerate(self.lines):
