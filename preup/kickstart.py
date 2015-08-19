@@ -17,7 +17,7 @@ from pykickstart.version import makeVersion
 from pykickstart.constants import KS_SCRIPT_POST, KS_SCRIPT_PRE
 from preup.logger import log_message, logging
 from preup import settings
-from preup.utils import write_to_file, get_file_content
+from preup.utils import write_to_file, get_file_content, check_file
 
 
 class YumGroupManager(object):
@@ -137,6 +137,7 @@ class PartitionGenerator(object):
     def generate_partitioning(self):
         """
         Returns dictionary with partition and realname and size
+
         :param filename:  filename with partition_layout in /root/preupgrade/kickstart directory
         :return: dictionary with layout
         """
@@ -290,21 +291,29 @@ class KickstartGenerator(object):
         return ksparser
 
     @staticmethod
-    def get_package_list(filename):
+    def get_package_list(filenameList):
         """
-        content packages/ReplacedPackages is taking care of packages, which were
-        replaced/obsoleted/removed between releases. It produces a file with a list
-        of packages which should be installed.
+        Get list of pacakges which should be installed by kickstart from given files.
+
+        Some contents generates lists of packages which should be installed on new system.
+        Get these packages, which are present inside base repository (so are always
+        available during system installation).
         """
-        lines = get_file_content(os.path.join(settings.KS_DIR, filename), 'rb', method=True)
+        packages = []
+        for filename in filenameList:
+            if(check_file(filename, "r") is False):
+                #TODO: some info about skipped - not found file - should be printed
+                continue
+            packages += get_file_content(os.path.join(settings.KS_DIR, filename), 'rb', method=True)
         # Remove newline character from list
-        lines = [line.strip() for line in lines]
-        return lines
+        packages = [pkg.strip() for pkg in packages]
+        return packages
 
     @staticmethod
     def get_kickstart_repo(filename):
         """
         returns dictionary with names and URLs
+
         :param filename: filename with available-repos
         :return: dictionary with enabled repolist
         """
@@ -322,6 +331,7 @@ class KickstartGenerator(object):
     def get_kickstart_users(filename, splitter=":"):
         """
         returns dictionary with names and uid, gid, etc.
+
         :param filename: filename with Users in /root/preupgrade/kickstart directory
         :return: dictionary with users
         """
@@ -356,15 +366,21 @@ class KickstartGenerator(object):
 
     def output_packages(self):
         """outputs %packages section"""
-        installed_packages = KickstartGenerator.get_package_list('RHRHEL7rpmlist')
-        removed_packages = KickstartGenerator.get_package_list('RemovedPkg-optional')
+        filenameList = [
+            "RHRHEL7rpmlist-replaced",
+            "RHRHEL7rpmlist-obsoleted-required",
+            "RHRHEL7rpmlist-kept",
+            ]
+        installed_packages = KickstartGenerator.get_package_list(filenameList)
+        #TODO: RemovedPkg* - that doesn't make sense now - discuss with Petr
+        #removed_packages = KickstartGenerator.get_package_list('RemovedPkg-optional')
         # TODO We should think about if ObsoletedPkg-{required,optional} should be used
-        if not installed_packages or not removed_packages:
+        if not installed_packages: # or not removed_packages:
             return None
         abs_fps = [os.path.join(settings.KS_DIR, fp) for fp in settings.KS_FILES]
-        ygg = YumGroupGenerator(installed_packages, removed_packages, *abs_fps)
+        ygg = YumGroupGenerator(installed_packages, list(), *abs_fps)
         display_package_names = ygg.get_list()
-        display_package_names = ygg.remove_packages(display_package_names)
+        # display_package_names = ygg.remove_packages(display_package_names)
         return display_package_names
         # return display_group_names + display_package_names
 
@@ -427,6 +443,7 @@ class KickstartGenerator(object):
     def get_partition_layout(self, lsblk, vgs, lvdisplay):
         """
         Returns dictionary with partition and realname and size
+
         :param filename:  filename with partition_layout in /root/preupgrade/kickstart directory
         :return: dictionary with layout
         """
